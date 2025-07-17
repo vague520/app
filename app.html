@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱的关怀 - 专属小程序</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff6b8b;
+            --secondary: #ff8e9e;
+            --light: #fff3f5;
+            --dark: #5a3d5c;
+            --accent: #ffd166;
+            --success: #a8e6cf;
+            --warning: #ffd3b6;
+            --card-shadow: 0 10px 30px rgba(255, 107, 139, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fff9fb 0%, #ffeef1 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 214, 166, 0.1) 0px, transparent 50px),
+                radial-gradient(circle at 90% 80%, rgba(168, 230, 207, 0.1) 0px, transparent 80px);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 0;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .heart-pulse {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--primary);
+            animation: pulse 1.5s infinite;
+            font-size: 24px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            padding: 5px;
+            margin: 30px 0 20px;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px 0;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+        }
+        
+        .tab:hover {
+            background: rgba(255, 107, 139, 0.1);
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 107, 139, 0.3);
+        }
+        
+        .content-section {
+            display: none;
+            margin-top: 25px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            color: var(--dark);
+            position: relative;
+            padding-left: 15px;
+        }
+        
+        .section-title::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            height: 100%;
+            width: 5px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            background: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .section-title h2 {
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(255, 107, 139, 0.2);
+        }
+        
+        .shop-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .shop-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.2);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .shop-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-right: 50px;
+        }
+        
+        .shop-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        
+        .menu-items {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+        
+        .item-price {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .interaction-card {
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .interaction-card::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.15;
+        }
+        
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .weather-info {
+            display: flex;
+            align-items: center;
+            background: var(--light);
+            border-radius: 16px;
+            padding: 15px 20px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .weather-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            color: var(--primary);
+        }
+        
+        .weather-details {
+            flex: 1;
+        }
+        
+        .temp {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .condition {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+        
+        .add-message {
+            background: var(--warning);
+            padding: 25px;
+            border-radius: 20px;
+            margin-top: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 107, 139, 0.3);
+        }
+        
+        .btn:hover {
+            background: #ff5a7d;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255, 107, 139, 0.4);
+        }
+        
+        .btn i {
+            font-size: 1.1rem;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: var(--dark);
+        }
+        
+        .add-shop {
+            background: var(--success);
+            color: var(--dark);
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px dashed rgba(90, 61, 92, 0.2);
+        }
+        
+        .add-shop:hover {
+            background: #97d9bc;
+            transform: scale(1.02);
+            border-color: var(--dark);
+        }
+        
+        .add-shop i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .add-shop p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: translateY(30px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-title {
+            font-size: 1.6rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: var(--light);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--dark);
+            transition: all 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            background: #ffd1d9;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px 20px;
+            color: var(--secondary);
+            font-size: 1rem;
+            border-top: 1px solid rgba(255, 142, 158, 0.2);
+        }
+        
+        .heart {
+            color: var(--primary);
+            display: inline-block;
+            margin: 0 2px;
+            animation: heartbeat 1.2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .menu-item-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .menu-item-input input {
+            flex: 1;
+        }
+        
+        .add-item-btn {
+            background: var(--light);
+            border: none;
+            width: 42px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+        
+        .add-item-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--secondary);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            opacity: 0.5;
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+        
+        .share-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+        }
+        
+        .share-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.4rem;
+            }
+            
+            .tabs {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <i class="fas fa-heart heart-pulse"></i>
+                <h1>爱的关怀</h1>
+                <p class="subtitle">记录我们的点滴，温暖每一天</p>
+            </div>
+        </header>
+        
+        <div class="share-container">
+            <p>分享给你的爱人，一起使用这个温馨的小程序 ❤️</p>
+            <button class="share-btn" id="share-btn">
+                <i class="fas fa-share-alt"></i> 分享链接
+            </button>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="shops">美食店铺</div>
+            <div class="tab" data-tab="interactions">暖心互动</div>
+            <div class="tab" data-tab="add-shop">添加店铺</div>
+        </div>
+        
+        <!-- 美食店铺区域 -->
+        <div id="shops" class="content-section active">
+            <div class="section-title">
+                <i class="fas fa-store"></i>
+                <h2>收藏的美食店铺</h2>
+            </div>
+            
+            <div class="card-grid" id="shops-container">
+                <!-- 店铺卡片将通过JS动态生成 -->
+            </div>
+            
+            <div class="add-shop" id="open-add-shop">
+                <i class="fas fa-plus-circle"></i>
+                <p>添加新的美食店铺</p>
+            </div>
+        </div>
+        
+        <!-- 暖心互动区域 -->
+        <div id="interactions" class="content-section">
+            <div class="section-title">
+                <i class="fas fa-comments"></i>
+                <h2>暖心互动</h2>
+            </div>
+            
+            <div class="card fade-in">
+                <div class="interaction-card">
+                    <p class="message" id="daily-message">
+                        亲爱的，今天也要记得好好吃饭哦！工作再忙也要照顾好自己，你最近好像瘦了，多点些好吃的补一补吧～ ❤️
+                    </p>
+                    <div class="message-info">
+                        <span>今日寄语</span>
+                        <span id="current-date">2023年10月15日</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card fade-in" style="animation-delay: 0.1s">
+                <div class="interaction-card">
+                    <p class="message">
+                        记得今天下午三点有重要的会议，我已经帮你设了闹钟。会议结束后奖励自己一杯咖啡吧！
+                    </p>
+                    <div class="message-info">
+                        <span>提醒事项</span>
+                        <span>2023年10月15日</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="weather-info fade-in" style="animation-delay: 0.2s">
+                <div class="weather-icon">
+                    <i class="fas fa-sun" id="weather-icon"></i>
+                </div>
+                <div class="weather-details">
+                    <div class="temp" id="weather-temp">28°C 晴朗</div>
+                    <div class="condition" id="weather-desc">今天天气很好，阳光明媚，适合出门走走～</div>
+                </div>
+            </div>
+            
+            <div class="add-message fade-in" style="animation-delay: 0.3s">
+                <div class="form-group">
+                    <label for="new-message">添加新的留言</label>
+                    <textarea id="new-message" class="form-control" placeholder="写下你想对TA说的话..."></textarea>
+                </div>
+                <button class="btn btn-secondary" id="send-message">
+                    <i class="fas fa-paper-plane"></i> 发送留言
+                </button>
+            </div>
+        </div>
+        
+        <!-- 添加店铺区域 -->
+        <div id="add-shop" class="content-section">
+            <div class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                <h2>添加美食店铺</h2>
+            </div>
+            
+            <div class="card">
+                <div class="interaction-card">
+                    <div class="form-group">
+                        <label for="shop-name">店铺名称</label>
+                        <input type="text" id="shop-name" class="form-control" placeholder="请输入店铺名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="shop-category">店铺分类</label>
+                        <input type="text" id="shop-category" class="form-control" placeholder="例如：中餐、西餐、甜点等">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>菜单项</label>
+                        <div id="menu-items-container">
+                            <div class="menu-item-input">
+                                <input type="text" class="form-control menu-item-name" placeholder="菜品名称">
+                                <input type="text" class="form-control menu-item-price" placeholder="价格" style="width: 100px;">
+                                <button class="add-item-btn" onclick="addMenuItem()">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-block" onclick="saveShop()">
+                        <i class="fas fa-save"></i> 保存店铺
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>用心制作 <span class="heart">❤️</span> 只为特别的你 | 数据保存在本地浏览器中</p>
+        </footer>
+    </div>
+    
+    <!-- 店铺详情模态框 -->
+    <div class="modal" id="shop-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-shop-name">店铺详情</h3>
+                <div class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div id="modal-shop-content">
+                <!-- 内容通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始店铺数据
+        const initialShops = [
+            {
+                id: 1,
+                name: "甜蜜烘焙坊",
+                category: "蛋糕 · 甜点",
+                menu: [
+                    { name: "草莓奶油蛋糕", price: "¥68" },
+                    { name: "提拉米苏", price: "¥42" },
+                    { name: "芒果千层", price: "¥58" },
+                    { name: "巧克力泡芙 (6个装)", price: "¥36" }
+                ]
+            },
+            {
+                id: 2,
+                name: "暖心小食堂",
+                category: "家常菜 · 健康",
+                menu: [
+                    { name: "番茄牛腩饭", price: "¥38" },
+                    { name: "三杯鸡套餐", price: "¥35" },
+                    { name: "清蒸鲈鱼饭", price: "¥45" },
+                    { name: "蔬菜沙拉", price: "¥22" }
+                ]
+            },
+            {
+                id: 3,
+                name: "浪漫咖啡屋",
+                category: "咖啡 · 下午茶",
+                menu: [
+                    { name: "拿铁咖啡", price: "¥32" },
+                    { name: "抹茶拿铁", price: "¥35" },
+                    { name: "蓝莓芝士蛋糕", price: "¥42" },
+                    { name: "松饼套餐", price: "¥58" }
+                ]
+            }
+        ];
+        
+        // 从localStorage获取店铺数据或初始化
+        let shops = JSON.parse(localStorage.getItem('shops')) || initialShops;
+        
+        // 每日消息
+        const dailyMessages = [
+            "亲爱的，今天也要记得好好吃饭哦！工作再忙也要照顾好自己～ ❤️",
+            "你是我每天醒来的第一个念头，也是入睡前的最后一个思念",
+            "无论多忙，都要记得按时吃饭，我想看到健康的你",
+            "今天有什么开心的事要和我分享吗？我永远是你最好的听众",
+            "每次看到你笑，我的世界都亮了，今天也要开心哦",
+            "虽然不能时刻陪在你身边，但我的心永远和你在一起",
+            "记得多喝水，按时休息，不要让自己太累了",
+            "你是我生命中最美好的意外，感谢遇见你"
+        ];
+        
+        // DOM 元素
+        const shopsContainer = document.getElementById('shops-container');
+        const tabs = document.querySelectorAll('.tab');
+        const contentSections = document.querySelectorAll('.content-section');
+        const dailyMessageEl = document.getElementById('daily-message');
+        const currentDateEl = document.getElementById('current-date');
+        const weatherIcon = document.getElementById('weather-icon');
+        const weatherTemp = document.getElementById('weather-temp');
+        const weatherDesc = document.getElementById('weather-desc');
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前日期
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            currentDateEl.textContent = now.toLocaleDateString('zh-CN', options);
+            
+            // 设置每日消息
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const messageIndex = dayOfYear % dailyMessages.length;
+            dailyMessageEl.textContent = dailyMessages[messageIndex];
+            
+            renderShops();
+            setupEventListeners();
+            updateWeather();
+        });
+        
+        // 渲染店铺列表
+        function renderShops() {
+            shopsContainer.innerHTML = '';
+            
+            if (shops.length === 0) {
+                shopsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-store-slash"></i>
+                        <p>还没有添加店铺哦，点击下方按钮添加第一家店铺吧！</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            shops.forEach((shop, index) => {
+                const menuItems = shop.menu.map(item => `
+                    <div class="menu-item">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">${item.price}</div>
+                    </div>
+                `).join('');
+                
+                const delay = index * 0.1;
+                
+                shopsContainer.innerHTML += `
+                    <div class="card fade-in" style="animation-delay: ${delay}s" data-id="${shop.id}">
+                        <div class="shop-header">
+                            <div>
+                                <div class="shop-name">${shop.name}</div>
+                                <div class="shop-tag">${shop.category}</div>
+                            </div>
+                            <div class="shop-actions">
+                                <div class="action-btn" onclick="viewShopDetail(${shop.id})">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="action-btn" onclick="editShop(${shop.id})">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="action-btn" onclick="deleteShop(${shop.id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="menu-items">
+                            ${menuItems}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 标签切换
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // 更新标签状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新内容区域
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === tabName) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // 打开添加店铺
+            document.getElementById('open-add-shop').addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelector('.tab[data-tab="add-shop"]').classList.add('active');
+                
+                contentSections.forEach(section => section.classList.remove('active'));
+                document.getElementById('add-shop').classList.add('active');
+            });
+            
+            // 发送消息
+            document.getElementById('send-message').addEventListener('click', function() {
+                const message = document.getElementById('new-message').value;
+                if (!message.trim()) {
+                    alert('请输入留言内容');
+                    return;
+                }
+                
+                alert('留言已发送！在实际应用中，这里会将消息发送给对方');
+                document.getElementById('new-message').value = '';
+            });
+            
+            // 分享链接
+            document.getElementById('share-btn').addEventListener('click', function() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: '爱的关怀 - 专属小程序',
+                        text: '分享这个温馨的小程序给你的爱人吧！',
+                        url: window.location.href
+                    })
+                    .catch(error => console.log('分享失败:', error));
+                } else {
+                    // 不支持Web Share API时，使用复制链接
+                    const tempInput = document.createElement('input');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = window.location.href;
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    alert('链接已复制到剪贴板，可以分享给你的爱人了！');
+                }
+            });
+        }
+        
+        // 查看店铺详情
+        function viewShopDetail(id) {
+            const shop = shops.find(s => s.id === id);
+            if (!shop) return;
+            
+            const menuItems = shop.menu.map(item => `
+                <div class="menu-item">
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.price}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('modal-shop-name').textContent = shop.name;
+            document.getElementById('modal-shop-content').innerHTML = `
+                <div class="shop-tag">${shop.category}</div>
+                <div class="menu-items" style="margin-top: 20px; max-height: 400px; overflow-y: auto;">
+                    ${menuItems}
+                </div>
+                <button class="btn btn-block" style="margin-top: 25px;" onclick="orderFromShop(${id})">
+                    <i class="fas fa-shopping-cart"></i> 立即下单
+                </button>
+            `;
+            
+            document.getElementById('shop-modal').classList.add('active');
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('shop-modal').classList.remove('active');
+        }
+        
+        // 从店铺下单
+        function orderFromShop(id) {
+            const shop = shops.find(s => s.id === id);
+            if (!shop) return;
+            
+            alert(`已为您跳转到 ${shop.name} 的下单页面！`);
+            closeModal();
+        }
+        
+        // 添加菜单项输入框
+        function addMenuItem() {
+            const container = document.getElementById('menu-items-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'menu-item-input';
+            newItem.innerHTML = `
+                <input type="text" class="form-control menu-item-name" placeholder="菜品名称">
+                <input type="text" class="form-control menu-item-price" placeholder="价格" style="width: 100px;">
+                <button class="add-item-btn" onclick="addMenuItem()">+</button>
+            `;
+            container.appendChild(newItem);
+        }
+        
+        // 保存店铺
+        function saveShop() {
+            const name = document.getElementById('shop-name').value;
+            const category = document.getElementById('shop-category').value;
+            
+            if (!name || !category) {
+                alert('请填写店铺名称和分类');
+                return;
+            }
+            
+            const menuItems = [];
+            const itemInputs = document.querySelectorAll('.menu-item-input');
+            
+            itemInputs.forEach(input => {
+                const nameInput = input.querySelector('.menu-item-name');
+                const priceInput = input.querySelector('.menu-item-price');
+                
+                if (nameInput.value && priceInput.value) {
+                    menuItems.push({
+                        name: nameInput.value,
+                        price: '¥' + priceInput.value
+                    });
+                }
+            });
+            
+            if (menuItems.length === 0) {
+                alert('请至少添加一个菜单项');
+                return;
+            }
+            
+            const newShop = {
+                id: Date.now(), // 使用时间戳作为ID
+                name,
+                category,
+                menu: menuItems
+            };
+            
+            shops.push(newShop);
+            localStorage.setItem('shops', JSON.stringify(shops));
+            
+            alert('店铺添加成功！');
+            document.getElementById('shop-name').value = '';
+            document.getElementById('shop-category').value = '';
+            document.getElementById('menu-items-container').innerHTML = `
+                <div class="menu-item-input">
+                    <input type="text" class="form-control menu-item-name" placeholder="菜品名称">
+                    <input type="text" class="form-control menu-item-price" placeholder="价格" style="width: 100px;">
+                    <button class="add-item-btn" onclick="addMenuItem()">+</button>
+                </div>
+            `;
+            
+            // 切换到店铺列表并刷新
+            tabs.forEach(t => t.classList.remove('active'));
+            document.querySelector('.tab[data-tab="shops"]').classList.add('active');
+            
+            contentSections.forEach(section => section.classList.remove('active'));
+            document.getElementById('shops').classList.add('active');
+            
+            renderShops();
+        }
+        
+        // 删除店铺
+        function deleteShop(id) {
+            if (!confirm('确定要删除这个店铺吗？')) return;
+            
+            shops = shops.filter(shop => shop.id !== id);
+            localStorage.setItem('shops', JSON.stringify(shops));
+            renderShops();
+        }
+        
+        // 更新天气信息（模拟）
+        function updateWeather() {
+            const conditions = ['晴朗', '多云', '小雨', '晴朗', '多云'];
+            const temperatures = [22, 25, 20, 28, 24];
+            const icons = ['fa-sun', 'fa-cloud', 'fa-cloud-rain', 'fa-sun', 'fa-cloud'];
+            const tips = [
+                '今天天气很好，阳光明媚，适合出门走走～',
+                '多云天气，记得带伞以防万一哦',
+                '今天有小雨，出门记得带伞',
+                '天气晴朗，适合户外活动',
+                '多云天气，温度适宜，适合约会'
+            ];
+            
+            const randomIndex = Math.floor(Math.random() * conditions.length);
+            
+            weatherIcon.className = `fas ${icons[randomIndex]}`;
+            weatherTemp.textContent = `${temperatures[randomIndex]}°C ${conditions[randomIndex]}`;
+            weatherDesc.textContent = tips[randomIndex];
+        }
+        
+        // 编辑店铺
+        function editShop(id) {
+            const shop = shops.find(s => s.id === id);
+            if (!shop) return;
+            
+            // 在实际应用中，这里会打开编辑表单
+            alert(`在实际应用中，这里会打开编辑 ${shop.name} 的表单`);
+        }
+        
+        // 点击外部关闭模态框
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('shop-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
